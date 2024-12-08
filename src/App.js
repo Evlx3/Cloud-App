@@ -1,25 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+import HomePage from "./pages/Home";
+import LoginPage from "./pages/Login";
+import SignupPage from "./pages/Signup";
+import CloudPage from "./pages/Cloud";
+import Documents from "./components/CL-Pages/NavigationItems/Documents";
+import Images from "./components/CL-Pages/NavigationItems/Images";
+import Videos from "./components/CL-Pages/NavigationItems/Videos";
+import VideoViewerPage from "./pages/VideoViewer";
+// import ErrorPage from "./pages/Error";
+import ProtectedRouteNoUser from "./pages/ProtectedRouteNoUser";
+import ProtectedRouteWithUser from "./pages/ProtectedRouteWithUser";
+
+const router = createBrowserRouter([
+  // { path: "/", element: <HomePage />, errorElement: <ErrorPage /> },
+  { path: "/", element: <HomePage /> },
+  {
+    path: "login",
+    element: (
+      <ProtectedRouteNoUser>
+        <LoginPage />
+      </ProtectedRouteNoUser>
+    ),
+  },
+  {
+    path: "signup",
+    element: (
+      <ProtectedRouteNoUser>
+        <SignupPage />
+      </ProtectedRouteNoUser>
+    ),
+  },
+  {
+    path: "cloud",
+    element: (
+      <ProtectedRouteWithUser>
+        <CloudPage />
+      </ProtectedRouteWithUser>
+    ),
+    children: [
+      { path: "documents", element: <Documents /> },
+      { path: "Images", element: <Images /> },
+      { path: "Videos", element: <Videos /> },
+    ],
+  },
+  {
+    path: "cloud/Videos/:videoId",
+    element: (
+      <ProtectedRouteWithUser>
+        <VideoViewerPage />
+      </ProtectedRouteWithUser>
+    ),
+  },
+]);
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
